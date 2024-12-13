@@ -19,8 +19,11 @@ class Server {
         this.app.use(express.json());
     }   
 
-
-
+    listen() {
+        this.Server.listen(this.port, () => {
+            console.log('Servidor HTTP corriendo en puerto', this.port);
+        });
+    }
 
 }
 

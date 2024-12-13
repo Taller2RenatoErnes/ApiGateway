@@ -3,9 +3,12 @@
     "@grpc/grpc-js": "^1.12.4",
     "@grpc/proto-loader": "^0.7.13",
     "axios": "^1.7.9",
+    "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
+    "logger": "^0.0.1",
+    "morgan": "^1.10.0",
     "nodemon": "^3.1.7"
   }
 }
