@@ -7,8 +7,9 @@ class Server {
         this.app = express();
         this.port = process.env.PORT || 3001;
         this.server = require('http').createServer(this.app);
-
-        this.rabbitServices = {};
+        this.paths = {
+            resources: '/api/resources',
+        }
         this.middlewares();
     }
 
