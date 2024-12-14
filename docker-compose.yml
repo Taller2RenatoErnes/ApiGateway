@@ -1,6 +1,7 @@
 services:
   rabbitmq:
     image: rabbitmq:3-management
+    restart: always
     container_name: rabbitmq
     ports:
       - "5672:5672"
@@ -10,6 +11,7 @@ services:
 
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
+    restart: always
     container_name: sqlserver
     ports:
       - "1433:1433"
@@ -29,6 +31,14 @@ services:
       - pgdata:/var/lib/postgresql/data 
     ports:
       - "5432:5432"
+  mongo:
+    image: mongo:latest
+    restart: always
+    container_name: mongo
+    ports:
+    - "27017:27017"    
+    volumes:
+    - mongo-data:/data/db 
 networks:
   my_network:
     driver: bridge
@@ -36,3 +46,5 @@ networks:
 volumes:
   sqlserver_data:
   pgdata:
+  mongo-data:
+    driver: local
