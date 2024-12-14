@@ -1,4 +1,5 @@
 const RabbitService = require("./rabbitMQService");
+const rabbitService = new RabbitService('users_queue', {}, 'localhost:50051'); // Ajusta el address del gRPC si es necesario
 
 const authHandlers = {
     login: async (data) => {
@@ -28,25 +29,25 @@ const careersHandlers = {
 };
 
 const usersHandlers = {
-    login: async (data) => {
-      const { email, password } = data;
-      console.log(`Iniciando sesión usuario: ${email}`);
-  
-      try {
-        const response = await RabbitService.callGrpcMethod('Login', { email, password });
-        console.log(`Respuesta de gRPC para Login:`, response);
-  
-        if (response.error) {
-          return { status: 'failure', message: response.message };
+    Login: async (data) => {
+        const { email, password } = data;
+        console.log(`Iniciando sesión usuario: ${email}`);
+
+        try {
+            const response = await rabbitService.callGrpcMethod('Login', { email, password });
+            console.log(`Respuesta de gRPC para Login:`, response);
+
+            if (response.error) {
+                return { status: 'failure', message: response.message };
+            }
+
+            return { status: 'success', token: response.token, message: response.message };
+        } catch (error) {
+            console.error(`Error durante Login:`, error);
+            return { status: 'failure', message: 'Error al iniciar sesión.' };
         }
-  
-        return { status: 'success', token: response.token, message: response.message };
-      } catch (error) {
-        console.error(`Error durante Login:`, error);
-        return { status: 'failure', message: 'Error al iniciar sesión.' };
-      }
     },
-  };
-  
+};
+
 
 module.exports = { authHandlers, careersHandlers, usersHandlers };

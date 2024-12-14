@@ -21,10 +21,27 @@ class RabbitService {
 
         this.queueName = queueName;
         this.handlers = handlers;
-
-        console.log("golaaaaaaaaaaa111111111", grpcAddress);
-
         this.grpcClient = new userProto.UserService(grpcAddress, grpc.credentials.createInsecure());
+    }
+
+    async sendLoginMessage() {
+        try {
+            const loginData = {
+                email: 'Briana8@hotmail.com',
+                password: '123'
+            };
+
+            const message = {
+                operation: 'Login',
+                data: loginData,
+                replyTo: "auth_queue",
+            };
+
+            await channel.sendToQueue(this.queueName, Buffer.from(JSON.stringify(message)));
+            console.log('Mensaje de login enviado a la cola:', this.queueName);
+        } catch (error) {
+            console.error('Error al enviar el mensaje de login:', error);
+        }
     }
 
     async setupRabbitMQ() {
@@ -37,6 +54,10 @@ class RabbitService {
 
             console.log(`RabbitMQ configurado para la cola: ${this.queueName}`);
             this.consumeQueue();
+
+
+            await this.sendLoginMessage();
+
         } catch (error) {
             console.error(`Error configurando RabbitMQ para ${this.queueName}:`, error);
         }
@@ -44,19 +65,18 @@ class RabbitService {
 
     consumeQueue() {
         console.log(`Escuchando mensajes en la cola: ${this.queueName}...`);
-
+    
         channel.consume(
             this.queueName,
             async (msg) => {
                 try {
                     const message = JSON.parse(msg.content.toString());
+    
                     const { operation, data, correlationId, replyTo } = message;
-
-                    console.log(`Operación recibida: ${operation}`);
 
                     if (this.handlers[operation]) {
                         const result = await this.handlers[operation](data);
-
+                        
                         if (replyTo) {
                             channel.sendToQueue(
                                 replyTo,
@@ -68,7 +88,7 @@ class RabbitService {
                     } else {
                         console.error(`Operación no soportada: ${operation}`);
                     }
-
+    
                     channel.ack(msg);
                 } catch (error) {
                     console.error(`Error procesando mensaje en ${this.queueName}:`, error);
@@ -78,7 +98,7 @@ class RabbitService {
             { noAck: false }
         );
     }
-
+    
     callGrpcMethod(methodName, data) {
         return new Promise((resolve, reject) => {
             this.grpcClient[methodName](data, (err, response) => {
@@ -86,7 +106,6 @@ class RabbitService {
                     console.error(`Error llamando a gRPC ${methodName}:`, err);
                     reject(err);
                 } else {
-                    console.log(`Respuesta gRPC ${methodName}:`, response);
                     resolve(response);
                 }
             });
