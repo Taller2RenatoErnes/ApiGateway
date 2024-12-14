@@ -11,6 +11,7 @@ class Server {
             resources: '/api/resources',
         }
         this.middlewares();
+        this.routes();
     }
 
     middlewares() {
@@ -19,8 +20,10 @@ class Server {
         this.app.use(express.json());
     }
 
- 
-
+    routes() {
+        this.app.use(this.paths.resources, require('../routes/monolithRoutes'));
+    }
+    
     listen() {
         this.server.listen(this.port, () => {
             console.log('Servidor HTTP corriendo en puerto', this.port);
