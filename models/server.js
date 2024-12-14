@@ -3,6 +3,7 @@ const logger = require('morgan');
 const cors = require('cors');
 const grpc = require('@grpc/grpc-js');
 const protoLoader = require('@grpc/proto-loader');
+const RabbitService = require('./rabbitMQService');
 
 class Server {
     constructor() {
@@ -11,6 +12,11 @@ class Server {
         this.Server = require('http').createServer(this.app);
 
         this.middlewares();
+    }
+
+    rabbitMQ(){
+        const rabbitService = new RabbitService();
+        rabbitService.setupRabbitMQ();
     }
 
     middlewares() {
