@@ -31,13 +31,14 @@ services:
       - pgdata:/var/lib/postgresql/data 
     ports:
       - "5432:5432"
-    mongo:
-      image: mongo:latest
-      container_name: mongo
-      ports:
-      - "27017:27017"    
-      volumes:
-      - mongo-data:/data/db 
+  mongo:
+    image: mongo:latest
+    restart: always
+    container_name: mongo
+    ports:
+    - "27017:27017"    
+    volumes:
+    - mongo-data:/data/db 
 networks:
   my_network:
     driver: bridge
@@ -45,5 +46,5 @@ networks:
 volumes:
   sqlserver_data:
   pgdata:
-    mongo-data:
+  mongo-data:
     driver: local
