@@ -31,18 +31,6 @@ const careersProto = grpc.loadPackageDefinition(packageDefinitionCareers);
 
 const clientCareers = new careersProto.career(process.env.GRPC_PORT_CAREERS, grpc.credentials.createInsecure());
 
-const PROTO_PATH_PROGRESS = path.join(__dirname, '../protobuf/progressManagement.proto');
-const packageDefinitionProgress = protoLoader.loadSync(PROTO_PATH_PROGRESS, {
-    keepCase: true,
-    longs: String,
-    enums: String,
-    defaults: true,
-    oneofs: true,
-});
-const progressProto = grpc.loadPackageDefinition(packageDefinitionProgress);
-
-const clientProgress = new progressProto.progress(process.env.GRPC_PORT_PROGRESS, grpc.credentials.createInsecure());
-
 const PROTO_PATH_SUBJECTS = path.join(__dirname, '../protobuf/subjectsManagement.proto');
 const packageDefinitionSubjects = protoLoader.loadSync(PROTO_PATH_SUBJECTS, {
     keepCase: true,
@@ -55,4 +43,4 @@ const subjectsProto = grpc.loadPackageDefinition(packageDefinitionSubjects);
 
 const clientSubjects = new subjectsProto.subject(process.env.GRPC_PORT_SUBJECTS, grpc.credentials.createInsecure());
 
-module.exports = {clientUsers, clientCareers, clientProgress, clientSubjects};
+module.exports = {clientUsers, clientCareers, clientSubjects};
