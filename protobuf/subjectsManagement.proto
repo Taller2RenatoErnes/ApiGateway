@@ -4,27 +4,27 @@ import "google/protobuf/empty.proto";
 
 
 message Subject{
-    string _id = 1;
+    int32 id = 1;
     string code = 2;
     string name = 3;
     string department = 4;
     int32 credits = 5;
     int32 semester = 6;
-    string career_id = 7;
+    int32 career_id = 7;
 }
 message PrerequisiteObject{
-  string _id = 1;
-  string subject_id = 2;
-  string preSubject_id = 3;
+  int32 id = 1;
+  int32 subject_id = 2;
+  int32 preSubject_id = 3;
 }
 
 message PrerequisiteMap{
-  string _id = 1;
+  string id = 1;
   repeated string prerequisites = 3;
 }
 
 message PostrequisiteMap{
-  string _id = 1;
+  string id = 1;
   repeated string postrequisites = 3;
 }
 

@@ -16,11 +16,12 @@ const subjectController = {
 
     async getPrerequisiteObjects(req, res) {
         const data  = req.body;
+        
         const token = getTokenAuth(req);
         if (!token) {
             return res.status(400).json({ error: 'Token no proporcionado' });
         }
-        clientSubjects.prerequisites_objects({ _id: data.subject_id }, (error, response) => {
+        clientSubjects.prerequisites_objects({ id: data.subject_id }, (error, response) => {
             if (error) {
                 console.error('Error al obtener los prerrequisitos:', error);
                 return res.status(500).json({ error: 'Error al obtener los prerrequisitos', details: error });
@@ -48,11 +49,10 @@ const subjectController = {
     async getPostrequisiteMap(req, res) {
         const  data  = req.body;
         const token = getTokenAuth(req);
-
         if (!token) {
             return res.status(400).json({ error: 'Token no proporcionado' });
         }
-        clientSubjects.postrequisites_map({ _id: data.career_id }, (error, response) => {
+        clientSubjects.postrequisites_map({ career_id: data.career_id }, (error, response) => {
             if (error) {
                 console.error('Error al obtener el mapa de postrequisitos:', error);
                 return res.status(500).json({ error: 'Error al obtener el mapa de postrequisitos', details: error });
