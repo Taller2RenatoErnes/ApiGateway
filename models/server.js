@@ -9,6 +9,7 @@ class Server {
         this.server = require('http').createServer(this.app);
         this.paths = {
             resources: '/api/resources',
+            auth: '/api/auth'
         }
         this.middlewares();
         this.routes();
@@ -22,6 +23,7 @@ class Server {
 
     routes() {
         this.app.use(this.paths.resources, require('../routes/monolithRoutes'));
+        this.app.use(this.paths.auth, require('../routes/authServiceRoutes'));
     }
     
     listen() {
