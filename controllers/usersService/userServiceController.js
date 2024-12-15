@@ -1,5 +1,7 @@
+
 const { clientUsers } = require('../../clients/grpcClient.js');
-const {getIdJWT, getTokenAuth} = require ('../../middleware/jwt.js')
+const { getIdJWT, getTokenAuth } = require('../../middleware/jwt.js')
+const grpc = require('@grpc/grpc-js');
 
 const userController = {
 
@@ -22,8 +24,9 @@ const userController = {
         if (!token) {
             return res.status(400).json({ error: 'Token no proporcionado' });
         }
-
-        clientUsers.UpdateProfile({ token, name, firstLastname, secondLastname }, (error, response) => {
+        const metadata = new grpc.Metadata();
+        metadata.add('authorization', `Bearer ${token}`);
+        clientUsers.UpdateProfile({ name, firstLastname, secondLastname }, metadata, (error, response) => {
             if (error) {
                 console.error('Error al actualizar perfil:', error);
                 return res.status(500).json({ error: 'Error al actualizar perfil', details: error });
@@ -34,12 +37,13 @@ const userController = {
 
     async profile(req, res) {
         const token = getTokenAuth(req);
-
+        const metadata = new grpc.Metadata();
+        metadata.add('authorization', `Bearer ${token}`);
         if (!token) {
             return res.status(400).json({ error: 'Token no proporcionado' });
         }
 
-        clientUsers.GetProfile({ token }, (error, response) => {
+        clientUsers.GetProfile({}, metadata, (error, response) => {
             if (error) {
                 console.error('Error al obtener perfil:', error);
                 return res.status(500).json({ error: 'Error al obtener perfil', details: error });
@@ -54,8 +58,10 @@ const userController = {
         if (!token) {
             return res.status(400).json({ error: 'Token no proporcionado' });
         }
-
-        clientUsers.GetProgress({ token }, (error, response) => {
+        const metadata = new grpc.Metadata();
+        metadata.add('authorization', `Bearer ${token}`);
+        
+        clientUsers.GetProgress({}, metadata, (error, response) => {
             if (error) {
                 console.error('Error al obtener progreso:', error);
                 return res.status(500).json({ error: 'Error al obtener progreso', details: error });
@@ -65,9 +71,16 @@ const userController = {
     },
 
     async updateProgress(req, res) {
-        const { approvedCourses, removedCourses } = req.body;
+        const token = getTokenAuth(req);
 
-        clientUsers.UpdateProgress({ approvedCourses, removedCourses }, (error, response) => {
+        if (!token) {
+            return res.status(400).json({ error: 'Token no proporcionado' });
+        }
+        const { approvedCourses, removedCourses } = req.body;
+        const metadata = new grpc.Metadata();
+        metadata.add('authorization', `Bearer ${token}`);
+
+        clientUsers.UpdateProgress({ approvedCourses, removedCourses }, metadata, (error, response) => {
             if (error) {
                 console.error('Error al actualizar progreso:', error);
                 return res.status(500).json({ error: 'Error al actualizar progreso', details: error });

@@ -9,7 +9,6 @@ class Server {
         this.server = require('http').createServer(this.app);
         this.paths = {
             resources: '/api/resources',
-            auth: '/api/auth',
             users: '/api/users',
             careers: '/api/careers',
             auth: '/api/auth',
@@ -26,6 +25,9 @@ class Server {
 
     routes() {
         this.app.use(this.paths.resources, require('../routes/monolithRoutes'));
+        this.app.use(this.paths.users, require('../routes/usersRoutes.js'));
+        this.app.use(this.paths.careers, require('../routes/careersRoutes'));
+        this.app.use(this.paths.auth, require('../routes/authRoutes'));
     }
     
     listen() {

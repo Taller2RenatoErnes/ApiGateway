@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+
+message Career{
+    string _id = 1;
+    string name = 2;
+    string description = 3;
+    int32 duration = 4;
+
+}
+
+service career {
+  rpc careers (google.protobuf.Empty) returns (GetCareerResponse) {}
+}
+
+
+
+message GetCareerResponse {
+  repeated Career careers = 1;
+}
+
